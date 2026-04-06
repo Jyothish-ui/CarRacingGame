@@ -8370,7 +8370,8 @@ body {
   position: fixed;
   margin: 0;
   padding: 0;
-  background: #000;
+  background: url("./assets/ui/loading-first.jpeg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 @media (max-width: 950px) {
@@ -8501,6 +8502,18 @@ body {
     transform: scale(0.8);
     transform-origin: top center;
   }
+
+  .profile-setup-card,
+  .menu-container {
+    transform: scale(0.85);
+    transform-origin: top center;
+    margin-top: 0 !important;
+  }
+
+  .avatar-panel,
+  .avatar-selection-system {
+    height: 40vh !important;
+  }
 }
 
 @media (max-width: 950px) {
@@ -8566,7 +8579,49 @@ body {
     font-size: 4vmin !important;
   }
 
-  .profile-setup-top,
+  .profile-setup-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 30vw);
+    grid-template-areas:
+      "header header"
+      "form avatar"
+      "country avatar"
+      "next next";
+    align-items: start;
+    gap: 1.2vh 1.6vw !important;
+    max-height: 90vh;
+  }
+
+  .profile-setup-header {
+    grid-area: header;
+  }
+
+  .profile-setup-top {
+    display: contents !important;
+  }
+
+  .profile-setup-form {
+    grid-area: form;
+  }
+
+  .avatar-panel {
+    grid-area: avatar;
+    justify-self: stretch;
+  }
+
+  .country-chooser {
+    grid-area: country;
+    width: 100%;
+    max-height: 20vh;
+    overflow-y: auto;
+  }
+
+  .country-carousel {
+    max-height: 20vh !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   .race-lobby-main {
     display: flex !important;
     flex-direction: row !important;
@@ -8588,5 +8643,12 @@ body {
 
   .control-pads {
     bottom: 5% !important;
+  }
+
+  .profile-setup-next {
+    position: fixed !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    z-index: 999 !important;
   }
 }

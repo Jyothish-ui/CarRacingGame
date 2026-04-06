@@ -2586,7 +2586,7 @@ window.initRace = async function initRace(config = {}) {
       weather: raceSettingsState.weather,
       difficulty: DIFFICULTY_LEVELS[raceSettingsState.difficultyIndex],
         mapTheme: MAPS[appState.selectedMapIndex]?.theme || null,
-      selectedCarModel: ASSETS.cars[appState.selectedCarIndex]?.model || "assets/cars/rc_car.glb"
+      selectedCarModel: ASSETS.cars[appState.selectedCarIndex]?.model || "./assets/cars/rc_car.glb"
       });
       if (elements.threeViewport) {
         elements.threeViewport.style.display = "block";
@@ -3147,9 +3147,9 @@ function bindGameControls() {
 
 function preloadBootAssets() {
   const assetsToLoad = [
-    "assets/ui/loading-first.jpeg",
-    "assets/ui/loading-second.jpeg",
-    "assets/ui/splash-user.jpeg",
+    "./assets/ui/loading-first.jpeg",
+    "./assets/ui/loading-second.jpeg",
+    "./assets/ui/splash-user.jpeg",
     ...Object.values(ASSETS.characters),
     ...ASSETS.cars.map((car) => car.src),
     ...AVATAR_LIBRARY.male,
