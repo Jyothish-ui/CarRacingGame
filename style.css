@@ -14,7 +14,8 @@
 html,
 body {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   margin: 0;
   padding: 0;
   overflow: hidden !important;
@@ -32,7 +33,7 @@ body {
 
 #appContainer {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   min-height: 100dvh;
   position: relative;
   overflow: hidden;
@@ -53,7 +54,7 @@ canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   opacity: 0;
   pointer-events: none;
   transition: opacity 260ms ease;
@@ -70,7 +71,7 @@ canvas {
   position: fixed;
   inset: 0;
   min-width: 100vw;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,9 +91,9 @@ canvas {
   position: absolute;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   min-width: 100vw;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .splash-photo {
@@ -372,7 +373,7 @@ canvas {
 .daily-reward-screen {
   position: fixed;
   inset: 0;
-  z-index: 76;
+  z-index: 220;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -390,7 +391,7 @@ canvas {
   position: relative;
   z-index: 1;
   width: min(940px, 94vw);
-  padding: 0 18px 22px;
+  padding: 0 18px 96px;
   border: 1px solid rgba(115, 180, 255, 0.28);
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(10, 41, 71, 0.96), rgba(8, 22, 39, 0.96));
@@ -481,8 +482,13 @@ canvas {
 }
 
 .daily-reward-cards {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 2px;
   gap: 10px;
 }
 
@@ -497,6 +503,8 @@ canvas {
   gap: 10px;
   position: relative;
   overflow: hidden;
+  flex: 0 0 clamp(120px, 20vw, 170px);
+  scroll-snap-align: start;
 }
 
 .reward-day-card.is-current {
@@ -547,9 +555,13 @@ canvas {
 }
 
 .daily-claim-button {
-  display: block;
-  margin: 22px auto 0;
-  min-width: 240px;
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  margin: 0;
+  min-width: 0;
+  width: clamp(200px, 30vw, 240px);
+  max-width: calc(100% - 32px);
   padding: 16px 30px;
   border: 1px solid rgba(163, 255, 121, 0.34);
   border-radius: 12px;
@@ -562,6 +574,8 @@ canvas {
   letter-spacing: 0.08em;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 14px 28px rgba(0, 0, 0, 0.24);
   cursor: pointer;
+  z-index: 5;
+  white-space: nowrap;
 }
 
 .daily-claim-button:disabled {
@@ -572,7 +586,7 @@ canvas {
 .reward-particles {
   position: fixed;
   inset: 0;
-  z-index: 77;
+  z-index: 221;
   pointer-events: none;
 }
 
@@ -1648,6 +1662,8 @@ canvas {
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.3);
   display: grid;
   gap: 18px;
+  position: relative;
+  padding-bottom: 96px;
 }
 
 .profile-setup-header h2 {
@@ -1815,6 +1831,8 @@ canvas {
     rgba(10, 29, 53, 0.88);
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
   gap: 22px;
+  position: relative;
+  padding-bottom: 96px;
 }
 
 .profile-setup-header {
@@ -2126,6 +2144,11 @@ canvas {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 10px 24px rgba(0, 0, 0, 0.24);
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 4;
+  margin: 0;
 }
 
 .profile-card {
@@ -4536,7 +4559,7 @@ canvas {
 .promo-card {
   background:
     linear-gradient(180deg, rgba(9, 19, 31, 0.88), rgba(15, 28, 46, 0.72)),
-    url("assets/lobby/garage-ref.jpeg") center/cover;
+    url("./assets/lobby/garage-ref.jpeg") center/cover;
 }
 
 .reward-card {
@@ -8491,8 +8514,8 @@ body {
 
 .profile-setup-next {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
   z-index: 4;
 }
 
@@ -8520,7 +8543,7 @@ body {
   html,
   body {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     position: fixed;
     touch-action: none;

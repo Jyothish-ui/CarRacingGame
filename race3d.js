@@ -119,7 +119,7 @@
       this.sunLight = null;
       this.car = null;
       this.playerRoot = null;
-      this.selectedCarModel = "assets/cars/rc_car.glb";
+      this.selectedCarModel = "./assets/cars/rc_car.glb";
       this.loadedCarPath = "";
       this.assetCache = Race3DEngine.assetCache || (Race3DEngine.assetCache = new Map());
       this.opponents = [];
@@ -137,6 +137,7 @@
       this.speedDisplay = 0;
       this.cameraTarget = new THREE.Vector3();
       this.lookTarget = new THREE.Vector3();
+      this.lookTargetDesired = new THREE.Vector3();
       this.frameTime = 0;
       this.minimapBounds = { minX: -1, maxX: 1, minZ: -1, maxZ: 1 };
       this.minimapPath = [];
@@ -405,14 +406,41 @@
     }
 
     applySafeModelMaterial(model, fallbackColor) {
+      const fallback = new THREE.Color(fallbackColor);
+
+      const toStandard = (mat) => {
+        if (!mat) {
+          return new THREE.MeshStandardMaterial({
+            color: fallback,
+            roughness: 0.8,
+            metalness: 0.2
+          });
+        }
+
+        const oldColor = mat.color?.isColor ? mat.color.clone() : fallback;
+        const roughness = (mat.roughness ?? 0.8);
+        const metalness = (mat.metalness ?? 0.2);
+
+        return new THREE.MeshStandardMaterial({
+          color: oldColor,
+          map: mat.map || undefined,
+          normalMap: mat.normalMap || undefined,
+          roughnessMap: mat.roughnessMap || undefined,
+          metalnessMap: mat.metalnessMap || undefined,
+          emissiveMap: mat.emissiveMap || undefined,
+          emissive: mat.emissive?.isColor ? mat.emissive.clone() : new THREE.Color(0x000000),
+          roughness,
+          metalness,
+          transparent: mat.transparent ?? false,
+          opacity: mat.opacity ?? 1,
+          side: mat.side ?? THREE.FrontSide
+        });
+      };
+
       model.traverse((child) => {
         if (!child.isMesh) return;
-        const safeColor = new THREE.Color(fallbackColor);
-        child.material = new THREE.MeshStandardMaterial({
-          color: safeColor,
-          roughness: 0.8,
-          metalness: 0.2
-        });
+        const oldMaterial = child.material;
+        child.material = Array.isArray(oldMaterial) ? oldMaterial.map(toStandard) : toStandard(oldMaterial);
         child.castShadow = true;
         child.receiveShadow = true;
         child.visible = true;
@@ -421,7 +449,7 @@
 
     async applyAsphaltMaterial() {
       try {
-        const prototype = await this.loadAsset("assets/track/asphalt.glb");
+        const prototype = await this.loadAsset("./assets/track/asphalt.glb");
         let asphaltColor = new THREE.Color(0x2b2b2b);
         prototype.traverse((child) => {
           if (child.isMesh && child.material && child.material.color) {
@@ -430,10 +458,16 @@
         });
         this.roadGroup.traverse((child) => {
           if (!child.isMesh) return;
+          const oldMat = child.material;
           child.material = new THREE.MeshStandardMaterial({
             color: asphaltColor.lerp(new THREE.Color(0x303030), 0.35),
+            map: oldMat?.map || undefined,
+            normalMap: oldMat?.normalMap || undefined,
+            roughnessMap: oldMat?.roughnessMap || undefined,
+            metalnessMap: oldMat?.metalnessMap || undefined,
             roughness: 0.72,
-            metalness: 0.2
+            metalness: 0.2,
+            side: oldMat?.side ?? THREE.DoubleSide
           });
           child.receiveShadow = true;
         });
@@ -466,13 +500,13 @@
         }
         console.log("Track loaded");
       } catch (error) {
-        console.error("Failed to load:", "assets/track/asphalt.glb", error);
+        console.error("Failed to load:", "./assets/track/asphalt.glb", error);
       }
     }
 
     async placeBarrierTest() {
       try {
-        const prototype = await this.loadAsset("assets/track/barrier.glb");
+        const prototype = await this.loadAsset("./assets/track/barrier.glb");
         if (this.barrierGroup) this.barrierGroup.clear();
         const segments = 44;
         for (let i = 0; i < segments; i += 1) {
@@ -494,13 +528,13 @@
         if (this.barrierGroup.children[0]) this.debugAssetVisible("barrier", this.barrierGroup.children[0]);
         console.log("Barriers placed");
       } catch (error) {
-        console.error("Failed to load:", "assets/track/barrier.glb", error);
+        console.error("Failed to load:", "./assets/track/barrier.glb", error);
       }
     }
 
     async placeTreeTest() {
       try {
-        const prototype = await this.loadAsset("assets/env/tree.glb");
+        const prototype = await this.loadAsset("./assets/env/tree.glb");
         if (this.treeGroup) this.treeGroup.clear();
         const points = this.trackCurve.getSpacedPoints(18);
         for (let i = 0; i < points.length; i += 1) {
@@ -527,7 +561,7 @@
         if (this.treeGroup.children[0]) this.debugAssetVisible("tree", this.treeGroup.children[0]);
         console.log("Trees placed");
       } catch (error) {
-        console.error("Failed to load:", "assets/env/tree.glb", error);
+        console.error("Failed to load:", "./assets/env/tree.glb", error);
       }
     }
 
@@ -565,7 +599,7 @@
     }
 
     async loadCarModel() {
-      const path = this.selectedCarModel || "assets/cars/rc_car.glb";
+      const path = this.selectedCarModel || "./assets/cars/rc_car.glb";
       const applyCar = (model) => {
         const currentProgress = this.car?.userData?.progress ?? this.progress;
         const currentOffset = this.car?.userData?.offset ?? this.offset;
@@ -668,7 +702,7 @@
 
     async startRace(config = {}) {
       await this.initialize();
-      this.selectedCarModel = config.selectedCarModel || this.selectedCarModel || "assets/cars/rc_car.glb";
+      this.selectedCarModel = config.selectedCarModel || this.selectedCarModel || "./assets/cars/rc_car.glb";
       if (!this.car || this.loadedCarPath !== this.selectedCarModel) await this.loadCarModel();
       velocity = 0;
       acceleration = 0;
@@ -697,7 +731,7 @@
     update(deltaSeconds, controls) {
       if (!this.ready) return this.getSnapshot();
       if (!this.raceActive || this.paused || this.snapshot.finished) {
-        this.updateCamera();
+        this.updateCamera(deltaSeconds || 0.016);
         this.render();
         return this.getSnapshot();
       }
@@ -752,7 +786,7 @@
       this.snapshot.progress = this.progress;
       this.snapshot.distanceKm = this.distanceTravelled / 1000;
       this.snapshot.opponentProgresses = this.opponents.map((enemy) => enemy.userData.progress);
-      this.updateCamera();
+      this.updateCamera(delta);
       this.render();
       return this.getSnapshot();
     }
@@ -819,24 +853,23 @@
       this.snapshot.totalRacers = allCars.length;
     }
 
-    updateCamera() {
+    updateCamera(deltaSeconds = 0.016) {
       if (!this.camera || !this.car) return;
+      const followAlpha = clamp(deltaSeconds * 6, 0.03, 0.22);
       if (this.cameraModeIndex === 0) {
         const tangent = this.trackCurve.getTangentAt(this.progress);
         this.cameraTarget.copy(this.car.position).add(vA.set(-tangent.x * 4.8, 1.7, -tangent.z * 4.8));
-        this.lookTarget.copy(this.car.position).add(vB.copy(tangent).multiplyScalar(5));
+        this.lookTargetDesired.copy(this.car.position).add(vB.copy(tangent).multiplyScalar(5));
       } else if (this.cameraModeIndex === 1) {
         this.cameraTarget.set(this.car.position.x, this.car.position.y + 15, this.car.position.z + 0.01);
-        this.lookTarget.copy(this.car.position);
+        this.lookTargetDesired.copy(this.car.position);
       } else {
         this.cameraTarget.copy(this.car.position).add(vA.set(0, 1.0, 1.5).applyQuaternion(this.car.quaternion));
-        this.lookTarget.copy(this.car.position).add(vB.copy(this.trackCurve.getTangentAt(this.progress)).multiplyScalar(10));
+        this.lookTargetDesired.copy(this.car.position).add(vB.copy(this.trackCurve.getTangentAt(this.progress)).multiplyScalar(10));
       }
-      this.camera.position.lerp(this.cameraTarget, 0.08);
-      if (Math.abs(velocity) > 0.02) {
-        this.camera.position.x += (Math.random() - 0.5) * 0.015;
-        this.camera.position.y += (Math.random() - 0.5) * 0.01;
-      }
+
+      this.camera.position.lerp(this.cameraTarget, followAlpha);
+      this.lookTarget.lerp(this.lookTargetDesired, followAlpha);
       this.camera.lookAt(this.lookTarget);
       this.camera.fov += (clamp(65 + Math.abs(velocity) * 8000, 65, 85) - this.camera.fov) * 0.1;
       this.camera.updateProjectionMatrix();
