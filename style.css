@@ -65,6 +65,10 @@ canvas {
   pointer-events: auto;
 }
 
+.app-screen.asset-fallback {
+  background: linear-gradient(180deg, #050505 0%, #1a1a1a 100%);
+}
+
 .splash-screen,
 .loading-screen,
 .countdown-overlay {
@@ -505,6 +509,23 @@ canvas {
   overflow: hidden;
   flex: 0 0 clamp(120px, 20vw, 170px);
   scroll-snap-align: start;
+}
+
+.reward-day-card.is-day1 {
+  border-color: rgba(120, 225, 255, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(120, 225, 255, 0.22),
+    0 0 28px rgba(120, 225, 255, 0.22),
+    0 0 70px rgba(120, 225, 255, 0.14);
+}
+
+.reward-day-card.is-day1::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 40% 30%, rgba(120, 225, 255, 0.22), transparent 62%);
+  pointer-events: none;
 }
 
 .reward-day-card.is-current {
@@ -1820,6 +1841,44 @@ canvas {
   position: relative;
   z-index: 1;
   width: min(980px, 94vw);
+}
+
+.profile-setup-shell {
+  width: min(920px, calc(100vw - 48px));
+  max-width: 920px;
+}
+
+.profile-setup-screen .profile-setup-card {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+  padding: clamp(14px, 2.4vw, 22px);
+}
+
+.profile-setup-screen .profile-setup-top {
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 280px);
+  gap: clamp(14px, 2.2vw, 22px);
+  align-items: start;
+}
+
+.profile-setup-screen .profile-setup-form {
+  gap: 14px;
+}
+
+.profile-setup-screen .avatar-panel {
+  align-self: start;
+}
+
+.profile-setup-screen .country-chooser {
+  margin-top: 6px;
+}
+
+.profile-setup-screen .country-carousel {
+  max-height: min(34vh, 260px);
+  overflow-y: auto;
 }
 
 .profile-setup-card {

@@ -233,6 +233,20 @@
               <button id="setupMaleButton" class="setup-gender-button" type="button">Male</button>
               <button id="setupFemaleButton" class="setup-gender-button" type="button">Female</button>
             </div>
+
+            <div class="country-chooser">
+              <div class="country-chooser-header">
+                <div class="country-search-block">
+                  <span class="country-chooser-title">Choose Country</span>
+                  <input id="setupCountrySearch" class="profile-input country-search-input" type="text" placeholder="Search country">
+                </div>
+                <div class="country-selected-chip">
+                  <span id="setupCountryFlag" class="country-flag"></span>
+                  <span id="setupCountryLabel" class="country-label">India</span>
+                </div>
+              </div>
+              <div id="countryCarousel" class="country-carousel"></div>
+            </div>
           </div>
 
           <div class="avatar-panel">
@@ -251,20 +265,6 @@
               <span id="setupAvatarCount" class="avatar-count">1 / 10</span>
             </div>
           </div>
-        </div>
-
-        <div class="country-chooser">
-          <div class="country-chooser-header">
-            <div class="country-search-block">
-              <span class="country-chooser-title">Choose Country</span>
-              <input id="setupCountrySearch" class="profile-input country-search-input" type="text" placeholder="Search country">
-            </div>
-            <div class="country-selected-chip">
-              <span id="setupCountryFlag" class="country-flag"></span>
-              <span id="setupCountryLabel" class="country-label">India</span>
-            </div>
-          </div>
-          <div id="countryCarousel" class="country-carousel"></div>
         </div>
 
         <button id="profileSetupNextButton" class="action-button primary profile-setup-next" type="button">Next</button>
@@ -855,6 +855,7 @@
 <script src="audio.js"></script>
 <script src="app.js"></script>
 
+<script src="main.js"></script>
 <script src="script.js"></script>   <!-- MUST COME FIRST -->
 <script src="race3d.js"></script>   <!-- THEN this -->
 

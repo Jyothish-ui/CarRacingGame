@@ -634,6 +634,22 @@
           model.userData.visual.position.y += 0.5;
           model.userData.visual.traverse((obj) => {
             if (obj.isMesh) {
+              const old = obj.material;
+              const toShiny = (mat) => new THREE.MeshStandardMaterial({
+                color: mat?.color?.isColor ? mat.color.clone() : new THREE.Color(0xffffff),
+                map: mat?.map || undefined,
+                normalMap: mat?.normalMap || undefined,
+                roughnessMap: mat?.roughnessMap || undefined,
+                metalnessMap: mat?.metalnessMap || undefined,
+                emissiveMap: mat?.emissiveMap || undefined,
+                emissive: mat?.emissive?.isColor ? mat.emissive.clone() : new THREE.Color(0x000000),
+                metalness: 0.9,
+                roughness: 0.1,
+                transparent: mat?.transparent ?? false,
+                opacity: mat?.opacity ?? 1,
+                side: mat?.side ?? THREE.FrontSide
+              });
+              obj.material = Array.isArray(old) ? old.map(toShiny) : toShiny(old);
               obj.castShadow = true;
               obj.receiveShadow = true;
             }

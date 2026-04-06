@@ -1706,6 +1706,7 @@ function renderDailyRewardUI() {
   DAILY_REWARD_AMOUNTS.forEach((amount, index) => {
     const card = document.createElement("div");
     card.className = "reward-day-card";
+    if (index === 0) card.classList.add("is-day1");
     if (index === currentOpenIndex) card.classList.add("is-current");
     if (index < claimedCount) card.classList.add("is-claimed");
     if (index > currentOpenIndex && index >= claimedCount) card.classList.add("is-locked");
