@@ -34,29 +34,29 @@ const PROFILE_COUNTRIES = COUNTRY_CODES.map((code) => ({
 }));
 const AVATAR_LIBRARY = {
   male: [
-    "assets/avatars/male-1.jpeg",
-    "assets/avatars/male-2.jpeg",
-    "assets/avatars/male-3.jpeg",
-    "assets/avatars/male-4.jpeg",
-    "assets/avatars/male-5.jpeg",
-    "assets/avatars/male-6.jpeg"
+    "./assets/avatars/male-1.jpeg",
+    "./assets/avatars/male-2.jpeg",
+    "./assets/avatars/male-3.jpeg",
+    "./assets/avatars/male-4.jpeg",
+    "./assets/avatars/male-5.jpeg",
+    "./assets/avatars/male-6.jpeg"
   ],
   female: [
-    "assets/avatars/female-1.jpeg",
-    "assets/avatars/female-2.jpeg",
-    "assets/avatars/female-3.jpeg",
-    "assets/avatars/female-4.jpeg",
-    "assets/avatars/female-5.jpeg",
-    "assets/avatars/female-6.jpeg"
+    "./assets/avatars/female-1.jpeg",
+    "./assets/avatars/female-2.jpeg",
+    "./assets/avatars/female-3.jpeg",
+    "./assets/avatars/female-4.jpeg",
+    "./assets/avatars/female-5.jpeg",
+    "./assets/avatars/female-6.jpeg"
   ]
 };
 
 const DAILY_REWARD_AMOUNTS = [500, 1000, 2500, 3500, 5000, 7000, 10000];
 const GAME_MODES = [
-  { id: "career", name: "Career", image: "assets/ui/loading-first.jpeg", unlocked: true, description: "Race through the main driving path." },
-  { id: "championship", name: "Championship", image: "assets/ui/loading-second.jpeg", unlocked: false, description: "Locked elite tournament mode." },
-  { id: "multiplayer", name: "Multiplayer", image: "assets/ui/splash-user.jpeg", unlocked: false, description: "Locked online challenge mode." },
-  { id: "2d", name: "2D Mode", image: "assets/ui/loading-first.jpeg", unlocked: true, description: "Classic 2D racing run." }
+  { id: "career", name: "Career", image: "./assets/ui/loading-first.jpeg", unlocked: true, description: "Race through the main driving path." },
+  { id: "championship", name: "Championship", image: "./assets/ui/loading-second.jpeg", unlocked: false, description: "Locked elite tournament mode." },
+  { id: "multiplayer", name: "Multiplayer", image: "./assets/ui/splash-user.jpeg", unlocked: false, description: "Locked online challenge mode." },
+  { id: "2d", name: "2D Mode", image: "./assets/ui/loading-first.jpeg", unlocked: true, description: "Classic 2D racing run." }
 ];
 const DIFFICULTY_LEVELS = ["Amateur", "Pro", "Legend"];
 const OPPONENT_NAMES = ["Emma", "Colton", "Ronny", "Mia", "Luca", "Sana", "Ryan", "Zoya"];
@@ -68,15 +68,15 @@ const CAMERA_MODES = [
 
 const ASSETS = {
   characters: {
-    male: "assets/characters/male-driver.svg",
-    female: "assets/characters/female-driver.svg"
+    male: "./assets/characters/male-driver.svg",
+    female: "./assets/characters/female-driver.svg"
   },
   cars: [
-    { id: 1, name: "RC One", src: "assets/cars/car-red.svg", model: "assets/cars/rc_car.glb", tier: "Free", description: "Main RC race car ready from the start.", rating: 391, price: 0, stats: { speed: 30, acceleration: 9.3, handling: 1.208, braking: 360 } },
-    { id: 2, name: "RC Two", src: "assets/cars/car-blue.svg", model: "assets/cars/rc_car.glb", tier: "Locked", description: "Sharper bodywork with stronger top-end pace.", rating: 418, price: 500, stats: { speed: 32, acceleration: 8.9, handling: 1.264, braking: 372 } },
-    { id: 3, name: "RC Three", src: "assets/cars/car-green.svg", model: "assets/cars/rc_car.glb", tier: "Locked", description: "Balanced race setup with improved corner stability.", rating: 447, price: 800, stats: { speed: 34, acceleration: 8.5, handling: 1.292, braking: 388 } },
-    { id: 4, name: "RC Four", src: "assets/cars/car-orange.svg", model: "assets/cars/rc_car.glb", tier: "Locked", description: "Aggressive tuned chassis built for faster exits.", rating: 463, price: 1200, stats: { speed: 35, acceleration: 8.2, handling: 1.336, braking: 402 } },
-    { id: 5, name: "RC Five", src: "assets/cars/car-yellow.svg", model: "assets/cars/rc_car.glb", tier: "Locked", description: "Premium RC racer with the strongest all-round feel.", rating: 512, price: 1500, stats: { speed: 39, acceleration: 7.6, handling: 1.418, braking: 446 } }
+    { id: 1, name: "RC One", src: "./assets/cars/car-red.svg", model: "./assets/cars/rc_car.glb", tier: "Free", description: "Main RC race car ready from the start.", rating: 391, price: 0, stats: { speed: 30, acceleration: 9.3, handling: 1.208, braking: 360 } },
+    { id: 2, name: "RC Two", src: "./assets/cars/car-blue.svg", model: "./assets/cars/rc_car.glb", tier: "Locked", description: "Sharper bodywork with stronger top-end pace.", rating: 418, price: 500, stats: { speed: 32, acceleration: 8.9, handling: 1.264, braking: 372 } },
+    { id: 3, name: "RC Three", src: "./assets/cars/car-green.svg", model: "./assets/cars/rc_car.glb", tier: "Locked", description: "Balanced race setup with improved corner stability.", rating: 447, price: 800, stats: { speed: 34, acceleration: 8.5, handling: 1.292, braking: 388 } },
+    { id: 4, name: "RC Four", src: "./assets/cars/car-orange.svg", model: "./assets/cars/rc_car.glb", tier: "Locked", description: "Aggressive tuned chassis built for faster exits.", rating: 463, price: 1200, stats: { speed: 35, acceleration: 8.2, handling: 1.336, braking: 402 } },
+    { id: 5, name: "RC Five", src: "./assets/cars/car-yellow.svg", model: "./assets/cars/rc_car.glb", tier: "Locked", description: "Premium RC racer with the strongest all-round feel.", rating: 512, price: 1500, stats: { speed: 39, acceleration: 7.6, handling: 1.418, braking: 446 } }
   ]
 };
 
@@ -153,6 +153,7 @@ const elements = {
   loadingText: document.getElementById("loadingText"),
   loadingPercent: document.getElementById("loadingPercent"),
   loadingBarFill: document.getElementById("loadingBarFill"),
+  installGameButton: document.getElementById("installGameButton"),
   profileButton: document.getElementById("profileButton"),
   profileInitial: document.getElementById("profileInitial"),
   walletBox: document.getElementById("walletBox"),
@@ -410,6 +411,7 @@ const appState = {
   friendsOpen: false,
   profileOpen: false,
   countrySearchQuery: "",
+  countryPicked: false,
   totalCoins: Number(localStorage.getItem(STORAGE_KEYS.coins) || 0),
   unlockedCars: loadUnlockedCars(),
   playerProfile: loadStoredProfile(),
@@ -455,6 +457,7 @@ const bootState = {
   awaitingProfileAfterReward: false,
   awaitingLobbyAfterReward: false
 };
+let deferredInstallPrompt = null;
 
 const raceLaunchState = {
   active: false,
@@ -801,6 +804,33 @@ function loadImage(src) {
     image.onload = () => resolve(image);
     image.onerror = () => reject(new Error(`Failed to load image: ${src}`));
   });
+}
+
+function applyImageFallback(img) {
+  if (!img) return;
+  img.onerror = () => {
+    img.onerror = null;
+    img.removeAttribute("src");
+    img.style.background = "linear-gradient(135deg, #22364a, #0b1420)";
+    img.style.objectFit = "cover";
+    img.style.display = "block";
+  };
+}
+
+function setupImageFallbacks() {
+  document.querySelectorAll("img").forEach((img) => {
+    applyImageFallback(img);
+    const currentSrc = img.getAttribute("src");
+    if (currentSrc && !currentSrc.startsWith("./") && !currentSrc.startsWith("http") && !currentSrc.startsWith("data:")) {
+      img.setAttribute("src", currentSrc.startsWith("/") ? `.${currentSrc}` : `./${currentSrc}`);
+    }
+  });
+}
+
+function updateInstallButtonVisibility() {
+  if (!elements.installGameButton) return;
+  const isStandalone = window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone;
+  elements.installGameButton.classList.toggle("hidden", !deferredInstallPrompt || Boolean(isStandalone));
 }
 
 function createTrack(map) {
@@ -1785,11 +1815,16 @@ function setProfileAvatar(step) {
 function setProfileCountry(code) {
   if (!PROFILE_COUNTRIES.some((country) => country.code === code)) return;
   appState.playerProfile.countryCode = code;
+  appState.countryPicked = true;
   saveProfile();
   updateProfileSetupUI();
 }
 
 function completeProfileSetup() {
+  if (!appState.countryPicked) {
+    elements.setupCountrySearch?.focus();
+    return;
+  }
   setPlayerName(elements.setupNameInput.value);
   appState.playerProfile.setupComplete = true;
   saveProfile();
@@ -2866,7 +2901,7 @@ function bindLobbyEvents() {
   });
   elements.avatarPrevButton.addEventListener("click", () => setProfileAvatar(-1));
   elements.avatarNextButton.addEventListener("click", () => setProfileAvatar(1));
-  elements.avatarChooseButton.addEventListener("click", () => setProfileAvatar(1));
+  elements.avatarChooseButton.addEventListener("click", completeProfileSetup);
   elements.setupMaleButton.addEventListener("click", () => setProfileAvatarGender("male"));
   elements.setupFemaleButton.addEventListener("click", () => setProfileAvatarGender("female"));
   elements.setupNameInput.addEventListener("change", (event) => setPlayerName(event.target.value));
@@ -2876,6 +2911,13 @@ function bindLobbyEvents() {
     renderCountryCarousel();
   });
   elements.profileSetupNextButton.addEventListener("click", completeProfileSetup);
+  elements.installGameButton?.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice.catch(() => null);
+    deferredInstallPrompt = null;
+    updateInstallButtonVisibility();
+  });
   elements.profileButton.addEventListener("click", () => toggleProfilePopup());
   if (elements.lobbyProfileTrigger) {
     elements.lobbyProfileTrigger.addEventListener("click", () => toggleProfilePopup(true));
@@ -3130,6 +3172,7 @@ function preloadBootAssets() {
 
 function initializeApp() {
   window.AudioManager?.init?.();
+  setupImageFallbacks();
   primeMobileLandscapeMode();
   bindLobbyEvents();
   bindGameControls();
@@ -3157,6 +3200,15 @@ function initializeApp() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initializeApp();
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    updateInstallButtonVisibility();
+  });
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    updateInstallButtonVisibility();
+  });
   const handleViewportResize = () => {
     const width = Math.round(window.visualViewport?.width || window.innerWidth);
     const height = Math.round(window.visualViewport?.height || window.innerHeight);
@@ -3176,4 +3228,5 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", handleViewportResize);
   window.visualViewport?.addEventListener("resize", handleViewportResize);
   window.visualViewport?.addEventListener("scroll", handleViewportResize);
+  updateInstallButtonVisibility();
 });

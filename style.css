@@ -8287,6 +8287,222 @@ body.is-landscape-ui .loading-bottom {
   }
 }
 
+.profile-setup-screen {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 950px) {
+  .profile-setup-shell {
+    width: 95vw !important;
+    height: 90vh;
+    max-width: 95vw !important;
+    max-height: 90vh;
+  }
+
+  .profile-setup-card {
+    min-height: 90vh;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  .profile-setup-top {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 2vw !important;
+  }
+
+  .profile-setup-form,
+  .avatar-panel {
+    flex: 1 1 48%;
+  }
+
+  .country-chooser {
+    width: 100%;
+    max-height: 20vh;
+    overflow-y: auto;
+  }
+
+  .country-carousel {
+    max-height: 20vh !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .profile-setup-next {
+    position: fixed !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    z-index: 999 !important;
+  }
+}
+
+@media (max-height: 500px) {
+  .profile-setup-card,
+  .race-lobby-shell,
+  .menu-container {
+    transform: scale(0.85);
+    transform-origin: top center;
+    margin-top: 0 !important;
+  }
+
+  .setup-input-row,
+  .avatar-panel,
+  .avatar-selection-system {
+    transform: scale(0.8);
+    transform-origin: top center;
+  }
+
+  .avatar-panel,
+  .avatar-selection-system {
+    height: 40vh !important;
+  }
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+
+@media (max-width: 950px) {
+  .profile-setup-shell,
+  .race-lobby-shell,
+  .room-shell,
+  .loading-bottom,
+  .pause-screen {
+    width: 100vmin !important;
+    height: auto;
+    max-width: 100vmin !important;
+    max-height: 100vmin;
+  }
+
+  .tap-button,
+  .loading-word,
+  .loading-percent,
+  .loading-caption,
+  .profile-setup-header h2,
+  .profile-setup-screen h3,
+  .avatar-panel-title,
+  .country-chooser-title,
+  .lobby-menu-button,
+  .lobby-play-button,
+  .hud-chip,
+  .race-info-meta,
+  .graphics-toggle,
+  .graphics-option,
+  .control-button,
+  .control-utility-button,
+  .action-button,
+  .profile-setup-next,
+  .wallet-box,
+  .profile-button,
+  .pause-title-row h2,
+  .pause-caption,
+  .pause-controls-title,
+  .pause-control-card,
+  .pause-action-button,
+  .race-time-list div {
+    font-size: 2.5vh !important;
+  }
+
+  .profile-setup-top,
+  .race-lobby-main {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+  }
+
+  .game-shell .hud,
+  .hud {
+    top: 5% !important;
+    right: 5% !important;
+    left: auto !important;
+    bottom: auto !important;
+  }
+
+  .game-coin-chip,
+  .minimap-shell {
+    right: 5% !important;
+  }
+
+  .control-pads {
+    bottom: 5% !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+}
+
+@media (orientation: portrait) {
+  body {
+    transform: rotate(90deg);
+    transform-origin: center;
+    width: 100vh;
+    height: 100vw;
+  }
+}
+
+.install-game-button {
+  appearance: none;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: rgba(246, 201, 69, 0.92);
+  color: #08111f;
+  font: inherit;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.profile-setup-shell,
+.race-lobby-shell {
+  width: 95vw !important;
+  height: 90vh;
+  max-width: 95vw !important;
+  max-height: 90vh;
+}
+
+.profile-setup-card,
+.race-lobby-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profile-setup-card {
+  position: relative;
+  min-height: 90vh;
+  padding-bottom: 5.5rem !important;
+}
+
+.profile-setup-next {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 4;
+}
+
+@media (max-height: 500px) {
+  .setup-input-row,
+  .avatar-panel {
+    transform: scale(0.8);
+    transform-origin: top center;
+  }
+}
+
 @media (max-width: 950px) {
   html,
   body {

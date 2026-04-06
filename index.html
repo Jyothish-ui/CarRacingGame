@@ -16,7 +16,7 @@
 <body>
   <div id="appContainer">
   <section id="splashScreen" class="splash-screen app-screen hidden">
-    <img class="splash-photo" src="assets/ui/splash-user.jpeg" alt="Racing car splash background">
+    <img class="splash-photo" src="./assets/ui/splash-user.jpeg" alt="Racing car splash background">
     <div class="splash-overlay"></div>
     <div class="splash-content">
       <button id="tapToContinueButton" class="tap-button" type="button">Tap to Continue</button>
@@ -24,8 +24,8 @@
   </section>
 
   <section id="loadingScreen" class="loading-screen app-screen" aria-live="polite">
-    <img id="loadingImageFirst" class="loading-photo is-visible" src="assets/ui/loading-first.jpeg" alt="Loading background first scene">
-    <img id="loadingImageSecond" class="loading-photo" src="assets/ui/loading-second.jpeg" alt="Loading background second scene">
+    <img id="loadingImageFirst" class="loading-photo is-visible" src="./assets/ui/loading-first.jpeg" alt="Loading background first scene">
+    <img id="loadingImageSecond" class="loading-photo" src="./assets/ui/loading-second.jpeg" alt="Loading background second scene">
     <div class="loading-overlay"></div>
     <div class="loading-bottom">
       <div class="loading-status-row">
@@ -45,6 +45,7 @@
         <div class="loading-bar-shine"></div>
       </div>
       <p id="loadingText" class="loading-caption">Preparing your profile screen...</p>
+      <button id="installGameButton" class="install-game-button hidden" type="button">Install Game</button>
     </div>
   </section>
 
@@ -209,7 +210,7 @@
   </section>
 
   <section id="profileSetupScreen" class="profile-setup-screen app-screen hidden">
-    <img class="profile-setup-bg" src="assets/ui/loading-first.jpeg" alt="Profile setup background">
+    <img class="profile-setup-bg" src="./assets/ui/loading-first.jpeg" alt="Profile setup background">
     <div class="profile-setup-overlay"></div>
     <div class="profile-setup-shell">
       <div class="profile-setup-card">
@@ -302,7 +303,7 @@
           </div>
         </div>
         <div class="daily-reward-car">
-          <img class="daily-reward-car-image" src="assets/ui/loading-first.jpeg" alt="Reward car">
+          <img class="daily-reward-car-image" src="./assets/ui/loading-first.jpeg" alt="Reward car">
         </div>
       </div>
 
@@ -412,9 +413,9 @@
   <section id="startingGridScreen" class="starting-grid-screen hidden">
     <div class="starting-grid-backdrop"></div>
     <div class="starting-grid-cars" aria-hidden="true">
-      <img class="starting-grid-car car-a" src="assets/cars/car-red.svg" alt="">
-      <img class="starting-grid-car car-b" src="assets/cars/car-blue.svg" alt="">
-      <img class="starting-grid-car car-c" src="assets/cars/car-green.svg" alt="">
+      <img class="starting-grid-car car-a" src="./assets/cars/car-red.svg" alt="">
+      <img class="starting-grid-car car-b" src="./assets/cars/car-blue.svg" alt="">
+      <img class="starting-grid-car car-c" src="./assets/cars/car-green.svg" alt="">
     </div>
     <div class="starting-grid-shell">
       <div class="starting-grid-card">
@@ -528,8 +529,8 @@
   </section>
 
   <section id="lobbyScreen" class="lobby-screen">
-    <video id="lobbyVideo" class="lobby-video" autoplay muted loop playsinline poster="assets/lobby/garage-ref.jpeg">
-      <source src="assets/lobby/garage-bg.mp4" type="video/mp4">
+    <video id="lobbyVideo" class="lobby-video" autoplay muted loop playsinline poster="./assets/lobby/garage-ref.jpeg">
+      <source src="./assets/lobby/garage-bg.mp4" type="video/mp4">
     </video>
     <div class="lobby-video-tint"></div>
     <div class="lobby-animated-lights" aria-hidden="true"></div>
@@ -796,7 +797,7 @@
         </div>
         <div class="pause-body">
           <div class="pause-ad-card">
-            <img src="assets/ui/splash-user.jpeg" alt="Pause side art">
+            <img src="./assets/ui/splash-user.jpeg" alt="Pause side art">
             <button class="pause-ad-button" type="button">Play It</button>
           </div>
 
@@ -828,7 +829,7 @@
           </div>
 
           <div class="pause-ad-card">
-            <img src="assets/ui/loading-second.jpeg" alt="Pause side art">
+            <img src="./assets/ui/loading-second.jpeg" alt="Pause side art">
             <button class="pause-ad-button" type="button">Play It</button>
           </div>
         </div>

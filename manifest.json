@@ -1,6 +1,7 @@
 {
   "name": "Racing Game",
   "short_name": "Race",
+  "scope": "./",
   "start_url": "./index.html",
   "display": "standalone",
   "prefer_related_applications": false,
