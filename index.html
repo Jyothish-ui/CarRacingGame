@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Mobile Racing Game</title>
+  <meta name="theme-color" content="#05080d">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script src="vendor-gltfloader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/postprocessing/UnrealBloomPass.js"></script>
+</head>
+<body>
+  <div id="appContainer">
+  <section id="splashScreen" class="splash-screen app-screen hidden">
+    <img class="splash-photo" src="assets/ui/splash-user.jpeg" alt="Racing car splash background">
+    <div class="splash-overlay"></div>
+    <div class="splash-content">
+      <button id="tapToContinueButton" class="tap-button" type="button">Tap to Continue</button>
+    </div>
+  </section>
+
+  <section id="loadingScreen" class="loading-screen app-screen" aria-live="polite">
+    <img id="loadingImageFirst" class="loading-photo is-visible" src="assets/ui/loading-first.jpeg" alt="Loading background first scene">
+    <img id="loadingImageSecond" class="loading-photo" src="assets/ui/loading-second.jpeg" alt="Loading background second scene">
+    <div class="loading-overlay"></div>
+    <div class="loading-bottom">
+      <div class="loading-status-row">
+        <div class="loading-word-group">
+          <span class="loading-word">Loading</span>
+          <span class="loading-dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </div>
+        <span id="loadingPercent" class="loading-percent">0%</span>
+      </div>
+            <span id="graphicsArrow" class="graphics-arrow">▼</span>
+      <div class="loading-bar-shell">
+        <div id="loadingBarFill" class="loading-bar-fill"></div>
+        <div class="loading-bar-shine"></div>
+      </div>
+      <p id="loadingText" class="loading-caption">Preparing your profile screen...</p>
+    </div>
+  </section>
+
+  <button id="profileButton" class="profile-button hidden" type="button" aria-label="Open player profile">
+    <span id="profileInitial" class="profile-initial">P</span>
+  </button>
+
+  <div id="walletBox" class="wallet-box hidden" aria-label="Coin wallet">
+    <span class="wallet-icon">M</span>
+    <span id="walletAmount" class="wallet-amount">0</span>
+  </div>
+
+  <div id="appToast" class="app-toast" aria-live="polite"></div>
+
+  <section id="profilePanelOverlay" class="profile-panel-overlay hidden" aria-hidden="true">
+    <section id="profilePanel" class="profile-panel profile-panel-v2">
+      <nav class="profile-layout-menu" aria-label="Profile menu">
+        <button class="profile-menu-item is-active" data-profile-tab="overview" type="button">Overview</button>
+        <button class="profile-menu-item profile-gallery-menu" data-profile-tab="gallery" type="button">
+          <span>Gallery</span>
+          <span id="profileGalleryArrow" class="profile-gallery-arrow" aria-hidden="true"></span>
+        </button>
+        <div id="profileGallerySubmenu" class="profile-gallery-submenu hidden">
+          <button class="profile-submenu-item" data-profile-subtab="photos" type="button">Photos</button>
+          <button class="profile-submenu-item" data-profile-subtab="videos" type="button">Videos</button>
+        </div>
+        <button class="profile-menu-item" data-profile-tab="history" type="button">History</button>
+        <button class="profile-menu-item" data-profile-tab="album" type="button">Album</button>
+      </nav>
+
+      <div class="profile-layout-center">
+        <div class="profile-center-topbar">
+          <div class="profile-top-currency">
+            <div class="profile-currency-chip">
+              <span class="profile-currency-mark">M</span>
+              <strong id="profilePanelCoins">0</strong>
+            </div>
+            <div class="profile-currency-chip diamonds">
+              <span class="profile-currency-mark">D</span>
+              <strong id="profilePanelDiamonds">120</strong>
+            </div>
+          </div>
+          <div class="profile-top-icons">
+            <button class="profile-top-icon" type="button" aria-label="Settings">⚙</button>
+            <button id="profilePanelClose" class="profile-top-icon close" type="button" aria-label="Close profile">×</button>
+          </div>
+        </div>
+
+        <div class="profile-panel-content">
+          <div class="profile-character-stage">
+            <div class="profile-spotlight"></div>
+            <img id="profilePanelCharacter" class="profile-character-image" src="" alt="Profile character">
+          </div>
+
+          <div class="profile-info-card">
+            <div class="profile-id-block">
+              <h2 id="profilePanelName">PLAYER</h2>
+              <div class="profile-meta-row">
+                <span id="profilePanelLevel" class="profile-level-badge">Lv. 1</span>
+                <span id="profilePanelId" class="profile-meta-chip">RG-000000</span>
+                <span id="profilePanelLanguage" class="profile-meta-chip">English</span>
+              </div>
+            </div>
+
+            <div class="profile-like-row">
+              <span class="profile-like-icon">👍</span>
+              <strong id="profilePanelLikes">128</strong>
+            </div>
+
+            <div class="profile-stats-grid">
+              <div class="profile-stat-card">
+                <span class="profile-stat-icon">🏆</span>
+                <strong id="profileStatWins">0</strong>
+                <span>Wins</span>
+              </div>
+              <div class="profile-stat-card">
+                <span class="profile-stat-icon">🎮</span>
+                <strong id="profileStatMatches">0</strong>
+                <span>Matches</span>
+              </div>
+              <div class="profile-stat-card">
+                <span class="profile-stat-icon">⭐</span>
+                <strong id="profileStatScore">0</strong>
+                <span>Score</span>
+              </div>
+            </div>
+
+            <div id="profilePanelBody" class="profile-panel-body">
+              <div class="profile-subtabs">
+                <button class="profile-subtab is-active" data-profile-subtab="photos" type="button">Photos</button>
+              </div>
+              <div id="profileDynamicContent" class="profile-dynamic-content"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section id="galleryPreviewModal" class="gallery-preview-modal hidden" aria-hidden="true">
+    <div class="gallery-preview-backdrop"></div>
+    <div class="gallery-preview-shell">
+      <button id="galleryPreviewClose" class="gallery-preview-close" type="button" aria-label="Close preview">×</button>
+      <img id="galleryPreviewImage" class="gallery-preview-image" src="" alt="Gallery preview">
+    </div>
+  </section>
+
+  <section id="replayPlaybackModal" class="replay-playback-modal hidden" aria-hidden="true">
+    <div class="gallery-preview-backdrop"></div>
+    <div class="replay-playback-shell">
+      <div class="replay-playback-head">
+        <h3>Replay Playback</h3>
+        <button id="replayPlaybackClose" class="gallery-preview-close" type="button" aria-label="Close replay">×</button>
+      </div>
+      <canvas id="replayPlaybackCanvas" class="replay-playback-canvas" width="960" height="540"></canvas>
+    </div>
+  </section>
+
+  <section id="profilePopup" class="profile-popup hidden" aria-hidden="true">
+    <div class="profile-card">
+      <div class="profile-card-header">
+        <div>
+          <p class="eyebrow">Player Profile</p>
+          <h2>Garage Identity</h2>
+        </div>
+        <button id="profileCloseButton" class="profile-close" type="button" aria-label="Close profile">x</button>
+      </div>
+
+      <label class="profile-field">
+        <span>Name</span>
+        <input id="playerNameInput" class="profile-input" type="text" maxlength="18" placeholder="Enter name">
+      </label>
+
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <span>Player ID</span>
+          <strong id="playerIdValue">RG-000000</strong>
+        </div>
+        <div class="profile-stat">
+          <span>Total Coins</span>
+          <strong id="profileCoinsValue">0</strong>
+        </div>
+        <div class="profile-stat">
+          <span>Total Matches</span>
+          <strong id="profileMatchesValue">0</strong>
+        </div>
+      </div>
+
+      <div class="invite-card">
+        <div class="module-title-row">
+          <span class="module-title">Invite Friend</span>
+          <span class="module-note">Local demo system</span>
+        </div>
+        <div class="invite-row">
+          <input id="friendIdInput" class="profile-input" type="text" maxlength="18" placeholder="Enter friend ID">
+          <button id="sendInviteButton" class="action-button" type="button">Send Invite</button>
+        </div>
+        <p id="inviteMessage" class="invite-message">Invite a friend by ID.</p>
+        <div id="inviteList" class="invite-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="profileSetupScreen" class="profile-setup-screen app-screen hidden">
+    <img class="profile-setup-bg" src="assets/ui/loading-first.jpeg" alt="Profile setup background">
+    <div class="profile-setup-overlay"></div>
+    <div class="profile-setup-shell">
+      <div class="profile-setup-card">
+        <div class="profile-setup-header">
+          <p class="eyebrow">Profile</p>
+          <h2>Build Driver Identity</h2>
+        </div>
+
+        <div class="profile-setup-top">
+          <div class="profile-setup-form">
+            <label class="profile-setup-field">
+              <span>Driver Name</span>
+              <div class="setup-input-row">
+                <span class="setup-input-icon">P</span>
+                <input id="setupNameInput" class="profile-input profile-setup-input" type="text" maxlength="18" placeholder="Enter Name Here..">
+              </div>
+            </label>
+
+            <div class="gender-toggle-row">
+              <button id="setupMaleButton" class="setup-gender-button" type="button">Male</button>
+              <button id="setupFemaleButton" class="setup-gender-button" type="button">Female</button>
+            </div>
+          </div>
+
+          <div class="avatar-panel">
+            <span class="avatar-panel-title">Choose Avatar</span>
+            <div class="avatar-selector">
+              <button id="avatarPrevButton" class="avatar-arrow" type="button" aria-label="Previous avatar"><</button>
+              <div class="avatar-stage">
+                <div class="avatar-ring">
+                  <img id="setupAvatarPreview" class="setup-avatar-preview" src="" alt="Selected avatar">
+                </div>
+              </div>
+              <button id="avatarNextButton" class="avatar-arrow" type="button" aria-label="Next avatar">></button>
+            </div>
+            <div class="avatar-meta-row">
+              <button id="avatarChooseButton" class="avatar-choose-button" type="button">Choose</button>
+              <span id="setupAvatarCount" class="avatar-count">1 / 10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="country-chooser">
+          <div class="country-chooser-header">
+            <div class="country-search-block">
+              <span class="country-chooser-title">Choose Country</span>
+              <input id="setupCountrySearch" class="profile-input country-search-input" type="text" placeholder="Search country">
+            </div>
+            <div class="country-selected-chip">
+              <span id="setupCountryFlag" class="country-flag"></span>
+              <span id="setupCountryLabel" class="country-label">India</span>
+            </div>
+          </div>
+          <div id="countryCarousel" class="country-carousel"></div>
+        </div>
+
+        <button id="profileSetupNextButton" class="action-button primary profile-setup-next" type="button">Next</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="errorScreen" class="profile-setup-screen app-screen hidden">
+    <div class="profile-setup-overlay"></div>
+    <div class="profile-setup-shell">
+      <div class="profile-setup-card">
+        <div class="profile-setup-header">
+          <p class="eyebrow">Error</p>
+          <h2>Unable To Start Race</h2>
+        </div>
+        <p id="errorMessageText" class="loading-caption" style="font-size:16px;color:#eef6ff;margin:10px 0 20px;">
+          Something went wrong while starting the race.
+        </p>
+        <button id="errorBackButton" class="action-button primary profile-setup-next" type="button">Back To Lobby</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="dailyRewardScreen" class="daily-reward-screen hidden">
+    <div class="daily-reward-backdrop"></div>
+    <div class="daily-reward-card">
+      <button id="closeRewardButton" class="daily-reward-close" type="button" aria-label="Close reward">x</button>
+      <div class="daily-reward-hero">
+        <div class="daily-reward-copy">
+          <div class="daily-reward-title-row">
+            <span class="daily-gift-icon">G</span>
+            <div>
+              <h2>Daily Reward</h2>
+              <p>Come back every day to collect bigger prizes.</p>
+            </div>
+          </div>
+        </div>
+        <div class="daily-reward-car">
+          <img class="daily-reward-car-image" src="assets/ui/loading-first.jpeg" alt="Reward car">
+        </div>
+      </div>
+
+      <div id="dailyRewardCards" class="daily-reward-cards"></div>
+
+      <button id="claimRewardButton" class="daily-claim-button" type="button">Claim Now!</button>
+    </div>
+    <div id="rewardParticles" class="reward-particles" aria-hidden="true"></div>
+  </section>
+
+  <section id="gameModesScreen" class="game-modes-screen hidden">
+    <div class="game-modes-backdrop"></div>
+    <div class="game-modes-card">
+      <div class="game-modes-header">
+        <div>
+          <p class="eyebrow">Modes</p>
+          <h2>Choose Game Mode</h2>
+        </div>
+        <button id="closeModesButton" class="profile-close" type="button" aria-label="Close modes">x</button>
+      </div>
+      <div id="gameModesGrid" class="game-modes-grid"></div>
+    </div>
+  </section>
+
+  <section id="raceSettingsScreen" class="race-settings-screen hidden">
+    <div class="race-settings-backdrop"></div>
+    <div class="race-settings-shell">
+      <div class="race-settings-topbar">
+        <button id="closeRaceSettingsButton" class="race-settings-back-button" type="button" aria-label="Back to modes"><</button>
+        <div class="race-settings-title">Race Settings</div>
+        <div class="race-settings-wallet">
+          <span class="race-settings-wallet-mark">M</span>
+          <strong id="raceSettingsCoinsValue">0</strong>
+        </div>
+      </div>
+
+      <div class="race-settings-board">
+        <div class="race-setting-row">
+          <div class="race-setting-label-card">
+            <span class="race-setting-icon">◎</span>
+            <span>Laps</span>
+          </div>
+          <div class="race-setting-control">
+            <button id="lapsMinusButton" class="race-step-button minus" type="button">-</button>
+            <div class="race-setting-value-box">
+              <strong id="lapsValue">2</strong>
+              <div class="race-slider-track"><span id="lapsFill"></span></div>
+            </div>
+            <button id="lapsPlusButton" class="race-step-button plus" type="button">+</button>
+          </div>
+        </div>
+
+        <div class="race-setting-row">
+          <div class="race-setting-label-card">
+            <span class="race-setting-icon">▦</span>
+            <span>Opponents</span>
+          </div>
+          <div class="race-setting-control">
+            <button id="opponentsMinusButton" class="race-step-button minus" type="button">-</button>
+            <div class="race-setting-value-box">
+              <strong id="opponentsValue">4</strong>
+              <div class="race-slider-track"><span id="opponentsFill"></span></div>
+            </div>
+            <button id="opponentsPlusButton" class="race-step-button plus" type="button">+</button>
+          </div>
+        </div>
+
+        <div class="race-setting-row">
+          <div class="race-setting-label-card">
+            <span class="race-setting-icon">☼</span>
+            <span>Weather</span>
+          </div>
+          <div class="race-setting-control weather-control">
+            <button id="weatherToggleButton" class="race-toggle-button" type="button">
+              <span id="weatherValue">Day</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="race-setting-row">
+          <div class="race-setting-label-card">
+            <span class="race-setting-icon">▥</span>
+            <span>Difficulty</span>
+          </div>
+          <div class="race-setting-control difficulty-control">
+            <button id="difficultyPrevButton" class="race-arrow-button" type="button"><</button>
+            <div class="race-difficulty-box">
+              <strong id="difficultyValue">Amateur</strong>
+              <div class="race-slider-track"><span id="difficultyFill"></span></div>
+            </div>
+            <button id="difficultyNextButton" class="race-arrow-button" type="button">></button>
+          </div>
+        </div>
+
+        <div class="race-settings-footer">
+          <div class="race-reward-box">
+            <span class="race-reward-label">Reward</span>
+            <strong id="raceRewardValue">1000</strong>
+            <span class="race-reward-coin">M</span>
+          </div>
+          <button id="raceSettingsStartButton" class="race-settings-next-button" type="button">Next >></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="startingGridScreen" class="starting-grid-screen hidden">
+    <div class="starting-grid-backdrop"></div>
+    <div class="starting-grid-cars" aria-hidden="true">
+      <img class="starting-grid-car car-a" src="assets/cars/car-red.svg" alt="">
+      <img class="starting-grid-car car-b" src="assets/cars/car-blue.svg" alt="">
+      <img class="starting-grid-car car-c" src="assets/cars/car-green.svg" alt="">
+    </div>
+    <div class="starting-grid-shell">
+      <div class="starting-grid-card">
+        <div class="starting-grid-head">
+          <div class="starting-grid-kicker">Race Results</div>
+          <h2>Starting Grid</h2>
+        </div>
+        <div class="starting-grid-table">
+          <div class="starting-grid-header-row">
+            <span>Pos</span>
+            <span>Driver</span>
+            <span>Team</span>
+          </div>
+          <div id="startingGridRows" class="starting-grid-rows"></div>
+        </div>
+        <div class="starting-grid-actions">
+          <button id="exitGridButton" class="starting-grid-exit" type="button">Exit Race</button>
+          <div id="startingGridCountdown" class="starting-grid-countdown hidden">5</div>
+          <button id="startGridRaceButton" class="starting-grid-start" type="button">Start Race</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="raceResultScreen" class="race-result-screen hidden">
+    <div class="race-result-backdrop"></div>
+    <div class="race-result-shell">
+      <div class="race-result-card">
+        <div class="race-result-head">
+          <div class="race-result-kicker">Race Complete</div>
+          <h2>Race Results</h2>
+        </div>
+
+        <div class="race-result-main">
+          <div class="race-ranking-board">
+            <div class="race-ranking-header">
+              <span>Pos</span>
+              <span>Driver</span>
+              <span>Team</span>
+            </div>
+            <div id="raceResultRows" class="race-result-rows"></div>
+          </div>
+
+          <div class="race-podium">
+            <div class="podium-stand podium-second">
+              <span class="podium-place">2</span>
+              <strong id="podiumSecondName">Racer</strong>
+            </div>
+            <div class="podium-stand podium-first">
+              <span class="podium-place">1</span>
+              <strong id="podiumFirstName">Winner</strong>
+            </div>
+            <div class="podium-stand podium-third">
+              <span class="podium-place">3</span>
+              <strong id="podiumThirdName">Racer</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="race-result-footer">
+          <div class="race-result-media-actions">
+            <button id="savePhotoButton" class="race-result-media-button" type="button" aria-label="Save screenshot">📄</button>
+            <button id="saveReplayButton" class="race-result-media-button" type="button" aria-label="Save replay">🎥</button>
+          </div>
+          <div class="race-result-coins">
+            <span class="race-result-coin-mark">M</span>
+            <div class="race-result-coin-copy">
+              <span>Coins Earned</span>
+              <strong id="raceResultCoinsValue">0</strong>
+            </div>
+          </div>
+          <div id="raceResultCoinBurst" class="race-result-coin-burst" aria-hidden="true"></div>
+          <div class="race-result-actions">
+            <button id="raceResultLobbyButton" class="starting-grid-exit" type="button">Lobby</button>
+            <button id="raceResultReplayButton" class="starting-grid-start" type="button">Replay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside id="friendsPanel" class="friends-panel">
+    <button id="friendsToggle" class="friends-toggle" type="button" aria-label="Toggle friends panel">
+      <span id="friendsArrow">></span>
+    </button>
+    <div class="friends-content">
+      <div class="friends-toolbar">
+        <div class="friends-filter">Online</div>
+        <div class="friends-tools">
+          <button class="friends-tool" type="button">↻</button>
+          <button class="friends-tool" type="button">⌕</button>
+        </div>
+      </div>
+      <section class="friend-section">
+        <h3>Playing</h3>
+        <div id="playingList" class="friend-list"></div>
+      </section>
+      <section class="friend-section">
+        <h3>Online</h3>
+        <div id="onlineList" class="friend-list"></div>
+      </section>
+      <section class="friend-section">
+        <h3>Offline</h3>
+        <div id="offlineList" class="friend-list"></div>
+      </section>
+    </div>
+  </aside>
+
+  <section id="countdownOverlay" class="countdown-overlay hidden">
+    <div id="countdownValue" class="countdown-value">4</div>
+  </section>
+
+  <section id="lobbyScreen" class="lobby-screen">
+    <video id="lobbyVideo" class="lobby-video" autoplay muted loop playsinline poster="assets/lobby/garage-ref.jpeg">
+      <source src="assets/lobby/garage-bg.mp4" type="video/mp4">
+    </video>
+    <div class="lobby-video-tint"></div>
+    <div class="lobby-animated-lights" aria-hidden="true"></div>
+
+    <div class="lobby-shell race-lobby-shell">
+      <header class="race-topbar">
+        <div class="race-topbar-left">
+          <button id="garageBackButton" class="garage-back-button" type="button" aria-label="Go back"><</button>
+          <button id="lobbyProfileTrigger" class="race-profile" type="button">
+            <img id="lobbyProfileImage" class="race-profile-image" src="" alt="Player profile">
+            <div class="race-profile-copy">
+              <div class="race-name-row">
+                <span id="lobbyLevelBadge" class="race-level-badge">LV 1</span>
+                <strong id="lobbyPlayerName">PLAYER</strong>
+              </div>
+              <span id="lobbyCountryMini" class="race-country-mini">India</span>
+              <div class="race-xp-track">
+                <div id="lobbyXpFill" class="race-xp-fill"></div>
+              </div>
+            </div>
+        </div>
+
+        <div class="race-currency-group">
+          <div class="race-currency-chip">
+            <span class="race-currency-icon coin">M</span>
+            <div class="race-currency-copy">
+              <span class="race-currency-label">Coins</span>
+              <strong id="lobbyCoinsValue">0</strong>
+            </div>
+          </div>
+          <button id="lobbySettingsButton" class="race-settings-button" type="button" aria-label="Open settings">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </header>
+
+      <div class="race-lobby-main">
+        <aside class="garage-stats-panel">
+          <div class="garage-panel-title">Garage</div>
+          <div class="garage-driver-name" id="garageDriverName">Furious86</div>
+          <div class="garage-rating-row">
+            <span>Rating</span>
+            <strong id="garageRatingValue">391</strong>
+          </div>
+          <div class="garage-stat-list">
+            <div class="garage-stat-item">
+              <div class="garage-stat-head">
+                <span>Max Speed</span>
+                <strong id="garageSpeedText">30.0 MPH</strong>
+              </div>
+              <div class="garage-stat-bar"><span id="garageSpeedBar"></span></div>
+            </div>
+            <div class="garage-stat-item">
+              <div class="garage-stat-head">
+                <span>Acceleration</span>
+                <strong id="garageAccelerationText">9.3 SEC</strong>
+              </div>
+              <div class="garage-stat-bar"><span id="garageAccelerationBar"></span></div>
+            </div>
+            <div class="garage-stat-item">
+              <div class="garage-stat-head">
+                <span>Handling</span>
+                <strong id="garageHandlingText">1.208 G</strong>
+              </div>
+              <div class="garage-stat-bar"><span id="garageHandlingBar"></span></div>
+            </div>
+            <div class="garage-stat-item">
+              <div class="garage-stat-head">
+                <span>Braking</span>
+                <strong id="garageBrakingText">360.0 Nm</strong>
+              </div>
+              <div class="garage-stat-bar"><span id="garageBrakingBar"></span></div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="race-hero">
+          <div class="race-hero-backdrop"></div>
+          <div class="garage-video-soften"></div>
+          <div class="garage-car-shadow"></div>
+          <div class="garage-car-stage">
+            <img id="lobbyCarPreview" class="garage-car-preview" src="" alt="Selected car preview">
+          </div>
+          <div class="race-hero-meta">
+            <div class="garage-action-row">
+              <button id="garageCustomizeButton" class="garage-secondary-button" type="button">Customize</button>
+              <button id="garageSelectButton" class="garage-select-button" type="button">Select</button>
+              <button id="garageBuyButton" class="garage-buy-button hidden" type="button">Buy</button>
+            </div>
+            <div class="garage-status-row">
+              <span id="garageSelectedLabel" class="garage-selected-label">Selected</span>
+              <span id="garageLockLabel" class="garage-lock-label hidden">Locked</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="garage-selection-strip">
+        <div id="garageCarStrip" class="garage-car-strip"></div>
+      </section>
+
+      <footer class="race-bottombar">
+        <div class="race-nav-group">
+          <button id="storeButton" class="race-nav-button" type="button">Store</button>
+          <button id="inventoryButton" class="race-nav-button" type="button">Inventory</button>
+          <button id="garageButton" class="race-nav-button is-active" type="button">Garage</button>
+          <button id="roomButton" class="race-nav-button" type="button">Room</button>
+        </div>
+        <button id="startGameButton" class="race-play-button" type="button">Play</button>
+      </footer>
+    </div>
+  </section>
+
+  <section id="roomScreen" class="room-screen hidden">
+    <div class="room-backdrop"></div>
+    <aside id="roomFriendsPanel" class="room-friends-panel">
+      <button id="roomFriendsToggle" class="room-friends-toggle" type="button" aria-label="Toggle room friends panel">
+        <span id="roomFriendsArrow"><</span>
+      </button>
+      <div class="room-friends-content">
+        <div class="room-friends-head">
+          <h2>Friends</h2>
+          <span>Invite your squad</span>
+        </div>
+        <section class="room-friend-section">
+          <h3>Playing</h3>
+          <div id="roomPlayingList" class="room-friend-list"></div>
+        </section>
+        <section class="room-friend-section">
+          <h3>Online</h3>
+          <div id="roomOnlineList" class="room-friend-list"></div>
+        </section>
+        <section class="room-friend-section">
+          <h3>Offline</h3>
+          <div id="roomOfflineList" class="room-friend-list"></div>
+        </section>
+      </div>
+    </aside>
+
+    <div class="room-shell">
+      <header class="room-header">
+        <button id="roomBackButton" class="room-back-button" type="button"><</button>
+        <div class="room-header-copy">
+          <span class="room-kicker">Private Match</span>
+          <h2>Create Room</h2>
+        </div>
+      </header>
+
+      <div class="room-board">
+        <div class="room-settings-card">
+          <div class="room-setting-row">
+            <span class="room-setting-label">Laps</span>
+            <div class="room-stepper">
+              <button id="roomLapsMinus" class="room-step-button" type="button">-</button>
+              <strong id="roomLapsValue">2</strong>
+              <button id="roomLapsPlus" class="room-step-button" type="button">+</button>
+            </div>
+          </div>
+
+          <div class="room-setting-row">
+            <span class="room-setting-label">Opponents</span>
+            <div class="room-stepper">
+              <button id="roomOpponentsMinus" class="room-step-button" type="button">-</button>
+              <strong id="roomOpponentsValue">4</strong>
+              <button id="roomOpponentsPlus" class="room-step-button" type="button">+</button>
+            </div>
+          </div>
+
+          <div class="room-setting-row">
+            <span class="room-setting-label">Speed</span>
+            <div class="room-stepper">
+              <button id="roomSpeedMinus" class="room-step-button" type="button">-</button>
+              <strong id="roomSpeedValue">Normal</strong>
+              <button id="roomSpeedPlus" class="room-step-button" type="button">+</button>
+            </div>
+          </div>
+
+          <div class="room-setting-row">
+            <span class="room-setting-label">Coin Bet</span>
+            <div class="room-stepper">
+              <button id="roomBetMinus" class="room-step-button" type="button">-</button>
+              <strong id="roomBetValue">200</strong>
+              <button id="roomBetPlus" class="room-step-button" type="button">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="room-players-card">
+          <div class="room-players-head">
+            <h3>Invite Friends</h3>
+            <span id="roomStatusText">Room not created yet</span>
+          </div>
+          <div id="roomInviteSlots" class="room-invite-slots"></div>
+          <button id="roomCreateButton" class="room-create-button" type="button">Create Room</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="gameScreen" class="game-shell hidden">
+    <div id="threeRaceViewport" class="three-race-viewport" aria-hidden="true"></div>
+    <canvas id="gameCanvas" aria-label="Mobile racing game"></canvas>
+
+    <div class="hud">
+      <div class="race-top-left">
+        <div class="race-info-box">
+          <div class="race-info-meta">
+            <span>POS: <strong id="positionValue">1/1</strong></span>
+            <span>LAP: <strong id="lapValue">1/1</strong></span>
+          </div>
+          <div class="race-time-list">
+            <div><span>Current</span><strong id="currentTimeValue">00:00:00</strong></div>
+            <div><span>Best</span><strong id="bestTimeValue">--:--:--</strong></div>
+            <div><span>Last</span><strong id="lastTimeValue">--:--:--</strong></div>
+            <div><span>Total</span><strong id="totalTimeValue">00:00:00</strong></div>
+          </div>
+
+        
+            <span id="graphicsArrow" class="graphics-arrow">▼</span>
+        </div>
+        <div class="graphics-panel">
+          <button id="graphicsToggleButton" class="graphics-toggle" type="button" aria-expanded="false">
+            <span>Graphics</span>
+            <span id="graphicsArrowGame" class="graphics-arrow">▼</span>
+          </button>
+          <div id="graphicsOptions" class="graphics-options">
+            <button class="graphics-option" data-graphics="classic" type="button">Classic</button>
+            <button class="graphics-option is-active" data-graphics="cinematic" type="button">Cinematic</button>
+            <button class="graphics-option" data-graphics="vibrant" type="button">Vibrant</button>
+            <button class="graphics-option" data-graphics="color-blue" type="button">Color Blue</button>
+            <button class="graphics-option" data-graphics="dramatic" type="button">Dramatic</button>
+            <button class="graphics-option" data-graphics="faded" type="button">Faded</button>
+          </div>
+        </div>
+      </div>
+      <div class="hud-right">
+        <button id="honorGameButton" class="hud-chip hud-action honor-button" type="button" aria-label="Honor action">Honor</button>
+        <button id="cameraToggleButton" class="hud-chip hud-action hud-icon-button" type="button" aria-label="Toggle camera">◔</button>
+        <button id="pauseGameButton" class="hud-chip hud-action hud-icon-button" type="button" aria-label="Pause game">Ⅱ</button>
+        <button id="exitGameButton" class="hud-chip hud-action hud-icon-button" type="button" aria-label="Exit race">×</button>
+      </div>
+    </div>
+
+    <div id="gameCoinChip" class="game-coin-chip" aria-label="Race coins">
+      <span class="game-coin-icon">M</span>
+      <span id="gameCoinValue">0</span>
+    </div>
+
+      <div class="minimap-shell" aria-label="Race minimap">
+        <div class="minimap-track">
+          <canvas id="minimapCanvas" class="minimap-canvas" width="80" height="220" aria-hidden="true"></canvas>
+          <div class="minimap-track-line"></div>
+          <div class="minimap-start-mark"></div>
+          <div id="minimapPlayerDot" class="minimap-dot player"></div>
+          <div id="minimapOpponentDots" class="minimap-opponents"></div>
+        </div>
+    </div>
+
+    <div id="pauseOverlay" class="pause-overlay hidden">
+      <div class="pause-screen">
+        <div class="pause-title-row">
+          <h2>Game Paused</h2>
+        </div>
+        <div class="pause-body">
+          <div class="pause-ad-card">
+            <img src="assets/ui/splash-user.jpeg" alt="Pause side art">
+            <button class="pause-ad-button" type="button">Play It</button>
+          </div>
+
+          <div class="pause-center-panel">
+            <p class="pause-caption">Controls can be changed any time in settings!</p>
+            <div class="pause-controls-box">
+              <div class="pause-controls-title">Controls</div>
+              <div class="pause-control-options">
+                <button class="pause-control-card" data-control-mode="tilt" type="button">
+                  <span class="pause-control-icon">◫</span>
+                  <span>Tilt</span>
+                </button>
+                <button class="pause-control-card" data-control-mode="steering" type="button">
+                  <span class="pause-control-icon">◉</span>
+                  <span>Steering</span>
+                </button>
+                <button class="pause-control-card is-active" data-control-mode="arrow" type="button">
+                  <span class="pause-control-icon">↔</span>
+                  <span>Arrow</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="pause-action-row">
+              <button id="pauseMenuButton" class="pause-action-button menu" type="button">Menu</button>
+              <button id="pauseRestartButton" class="pause-action-button restart" type="button">Restart</button>
+              <button id="pauseResumeButton" class="pause-action-button resume" type="button">Resume</button>
+            </div>
+          </div>
+
+          <div class="pause-ad-card">
+            <img src="assets/ui/loading-second.jpeg" alt="Pause side art">
+            <button class="pause-ad-button" type="button">Play It</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-pads">
+      <div class="control-pad control-pad-left">
+        <button id="hornBtn" class="control-utility-button horn-button" type="button" aria-label="Horn">
+          <span class="horn-icon" aria-hidden="true"></span>
+        </button>
+        <button class="control-button" data-control="left" aria-label="Steer left">≪</button>
+        <button class="control-button" data-control="right" aria-label="Steer right">≫</button>
+      </div>
+      <div class="control-pad control-pad-right">
+        <button class="control-button" data-control="accelerate" aria-label="Accelerate">▲</button>
+        <button class="control-button" data-control="brake" aria-label="Brake">▼</button>
+      </div>
+    </div>
+  </main>
+  </div>
+
+<script src="audio.js"></script>
+<script src="app.js"></script>
+
+<script src="script.js"></script>   <!-- MUST COME FIRST -->
+<script src="race3d.js"></script>   <!-- THEN this -->
+
+<script src="replay.js"></script>
+<script src="profile.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch((error) => {
+      console.warn('Service worker registration failed', error);
+    });
+  });
+}
+</script>
+
+</body>
+</html>
